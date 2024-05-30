@@ -4,25 +4,14 @@
             "name": "English",
             "id": "en",
             "flagUrl": "images/flags/en.png",
-            "default": true
+            "default": false
         },
 
         {
             "name": "Español",
             "id": "es",
-            "flagUrl": "images/flags/es.png"
-        },
-
-        {
-            "name": "Français",
-            "id": "fr",
-            "flagUrl": "images/flags/fr.png"
-        },
-
-        {
-            "name": "中文",
-            "id": "zh",
-            "flagUrl": "images/flags/zh.png"
+            "flagUrl": "images/flags/es.png",
+            "default": true
         }
     ],
 

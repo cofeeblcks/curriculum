@@ -1,84 +1,80 @@
 {
-    "name": "Jonas Einstein",
-    "profilePictureUrl": "images/pictures/avatar.png",
-
+    "name": "Hadik Chavez",
+    "profilePictureUrl": "images/pictures/profile.png",
     "locales": {
         "en": {
-            "credits": "Designed by <strong><a class='light' href='https://github.com/ryanbalieiro'>Ryan Balieiro</a></strong>",
-            "role": "UX Designer"
+            "credits": "Designed by <strong><a class='light' href='https://github.com/ryanbalieiro'>Ryan Balieiro</a></strong><br>Modified by <strong><a class='light' href='https://github.com/cofeeblcks'>CofeeBlcks</a></strong>",
+            "role": "Developer Fullstack"
         },
-
         "es": {
-            "credits": "Hecho por <strong><a class='light' href='https://github.com/ryanbalieiro'>Ryan Balieiro</a></strong>",
-            "role": "Designer de UX"
-        },
-
-        "fr": {
-            "credits": "Conçu par <strong><a class='light' href='https://github.com/ryanbalieiro'>Ryan Balieiro</a></strong>",
-            "role": "Designer UX"
-        },
-
-        "zh": {
-            "credits": "设计：<strong><a class='light' href='https://github.com/ryanbalieiro'>Ryan Balieiro</a></strong>",
-            "role": "用户体验设计师"
+            "credits": "Hecho por <strong><a class='light' href='https://github.com/ryanbalieiro'>Ryan Balieiro</a></strong><br>Modificado por <strong><a class='light' href='https://github.com/cofeeblcks'>CofeeBlcks</a></strong>",
+            "role": "Desarrollador fullstack"
         }
     },
-
     "contact": {
         "address": {
             "id": "address",
             "value": "123 Main Street, Cupertino, CA 01234",
             "valueShort": "Cupertino, CA 01234",
             "faIcon": "fa-solid fa-city",
-            "href": null
+            "href": null,
+            "target": null
         },
-
         "email": {
             "id": "email",
-            "value": "jonas.einstein@genius.com",
-            "valueShort": "jonas.einstein@genius.com",
+            "value": "chavezhadik@gmail.com",
+            "valueShort": "chavezhadik@gmail.com",
             "faIcon": "fa-solid fa-envelope",
-            "href": "mailto:jonas.einstein@genius.com"
+            "href": "mailto:chavezhadik@gmail.com",
+            "target": null
         },
-
         "facebook": {
             "id": "facebook",
-            "value": "Jonas Einstein",
+            "value": "Hadik Chavez",
             "valueShort": "J. Einstein",
             "faIcon": "fa-brands fa-facebook",
-            "href": "https://facebook.com"
+            "href": "https://facebook.com",
+            "target": null
         },
-
         "github": {
             "id": "github",
-            "value": "@jonas.einstein.official",
-            "valueShort": "@jonas.einstein.official",
+            "value": "@cofeeblcks",
+            "valueShort": "@cofeeblcks",
             "faIcon": "fa-brands fa-github",
-            "href": "https://github.com"
+            "href": "https://github.com/cofeeblcks",
+            "target": null
         },
-
         "instagram": {
             "id": "instagram",
-            "value": "@jonas.einstein.official",
-            "valueShort": "@jonas.einstein.official",
+            "value": "@cofeeblcks",
+            "valueShort": "@cofeeblcks",
             "faIcon": "fa-brands fa-instagram",
-            "href": "https://instagram.com"
+            "href": "https://instagram.com",
+            "target": null
         },
-
         "linkedin": {
             "id": "linkedin",
-            "value": "@jonas.einstein.official",
-            "valueShort": "@jonas.einstein.official",
+            "value": "@chavezhadik",
+            "valueShort": "@chavezhadik",
             "faIcon": "fa-brands fa-linkedin",
-            "href": "https://linkedin.com"
+            "href": "https://linkedin.com/chavezhadik",
+            "target": null
         },
-
         "phone": {
             "id": "phone",
-            "value": "+1 (123) 456-7890",
-            "valueShort": "(123) 456-7890",
+            "value": "+57 (317) 7219177",
+            "valueShort": "(317) 7219177",
             "faIcon": "fa-solid fa-phone",
-            "href": "tel:1234567890"
+            "href": "tel:+573177219177",
+            "target": null
+        },
+        "cv": {
+            "id": "cv",
+            "value": "Descarga CV",
+            "valueShort": "Descarga CV",
+            "faIcon": "fa-solid fa-file",
+            "href": "documents/cv_hadik_chavez.pdf",
+            "target": "_blank"
         }
     }
 }

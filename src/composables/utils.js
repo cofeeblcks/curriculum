@@ -108,6 +108,24 @@ export function useUtils() {
         return breakpoints[breakpoint]
     }
 
+        /**
+     * @param {Number} numericValue
+     * @param {Object} breakpoints
+     * @returns {String|Number}
+     */
+        const parseLevels = (numericValue, breakpoints) => {
+            let level = clamp(numericValue, 0, 100)
+            if(!breakpoints || typeof breakpoints !== 'object') {
+                return level + "%"
+            }
+    
+            const breakpointsKeys = Object.keys(breakpoints)
+            const breakpoint = breakpointsKeys.reduce((prev, curr) => {
+                return Number(curr) <= level ? curr : prev
+            }, "0")
+            return breakpoints[breakpoint]
+        }
+
     /**
      * @param {Array} array
      * @return {Array}
@@ -130,6 +148,7 @@ export function useUtils() {
         localizeDate,
         parseDate,
         parsePercentage,
+        parseLevels,
         reverseArray
     }
 }

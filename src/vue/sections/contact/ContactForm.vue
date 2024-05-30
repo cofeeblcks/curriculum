@@ -1,270 +1,275 @@
 <template>
-    <form id="contact-form">
-        <div class="row contact-form-row align-items-stretch">
-            <!-- Feedback Alert -->
-            <div class="col-12 mb-1" v-if="alertStatus">
-                <Alert :type="alertStatus.type" :message="alertStatus.message"/>
-            </div>
+	<form id="contact-form">
+		<div class="row contact-form-row align-items-stretch">
+			<!-- Feedback Alert -->
+			<div class="col-12 mb-1" v-if="alertStatus">
+				<Alert :type="alertStatus.type" :message="alertStatus.message" />
+			</div>
 
-            <!-- Left Column -->
-            <div class="col-xl-6">
-                <!-- Name Input -->
-                <div class="form-group input-group">
-                    <span class="input-group-text input-group-attach"><i class="fa fa-signature"/></span>
-                    <input class="form-control" id="form-name" type="text" :placeholder="data.getString('name') + ' *'" required/>
-                </div>
+			<!-- Left Column -->
+			<div class="col-xl-6">
+				<!-- Name Input -->
+				<div class="form-group input-group">
+					<span class="input-group-text input-group-attach"><i class="fa fa-signature" /></span>
+					<input class="form-control" id="form-name" type="text" :placeholder="data.getString('name') + ' *'" required />
+				</div>
 
-                <!-- E-mail Address Input -->
-                <div class="form-group input-group">
-                    <span class="input-group-text input-group-attach"><i class="fa fa-envelope"/></span>
-                    <input class="form-control" id="form-email" type="email" :placeholder="data.getString('email') + ' *'" required/>
-                </div>
+				<!-- E-mail Address Input -->
+				<div class="form-group input-group">
+					<span class="input-group-text input-group-attach"><i class="fa fa-envelope" /></span>
+					<input class="form-control" id="form-email" type="email" :placeholder="data.getString('email') + ' *'" required />
+				</div>
 
-                <!-- Subject Input -->
-                <div class="form-group input-group">
-                    <span class="input-group-text input-group-attach"><i class="fa fa-pen-to-square"/></span>
-                    <input class="form-control" id="form-subject" type="text" :placeholder="data.getString('subject') + ' *'" required/>
-                </div>
-            </div>
+				<!-- Subject Input -->
+				<div class="form-group input-group">
+					<span class="input-group-text input-group-attach"><i class="fa fa-pen-to-square" /></span>
+					<input class="form-control" id="form-subject" type="text" :placeholder="data.getString('subject') + ' *'" required />
+				</div>
+			</div>
 
-            <!-- Right Column -->
-            <div class="col-xl-6">
-                <!-- Message TextArea -->
-                <div class="form-group form-group-textarea mb-md-0">
-                    <textarea class="form-control" id="form-message" :placeholder="data.getString('message')" required/>
-                </div>
-            </div>
+			<!-- Right Column -->
+			<div class="col-xl-6">
+				<!-- Message TextArea -->
+				<div class="form-group form-group-textarea mb-md-0">
+					<textarea class="form-control" id="form-message" :placeholder="data.getString('message')" required />
+				</div>
+			</div>
 
-            <!-- Bottom Column -->
-            <div class="col-12 text-center mt-3 mt-lg-4">
-                <button class="btn btn-primary btn-xl" type="submit" id="btn-submit-message" :class="{disabled: submitStatus === SubmitStatus.SENDING}">
-                    <i class="fa fa-envelope me-1"/> {{ data.getString('sendMessage') }}
-                </button>
-            </div>
-        </div>
-    </form>
+			<!-- Bottom Column -->
+			<div class="col-12 text-center mt-3 mt-lg-4">
+				<button class="btn btn-primary btn-xl" type="submit" id="btn-submit-message" :class="{disabled: submitStatus === SubmitStatus.SENDING}"><i class="fa fa-envelope me-1" /> {{ data.getString('sendMessage') }}</button>
+			</div>
+		</div>
+	</form>
 </template>
 
 <script setup>
-import {useData} from "../../../composables/data.js"
-import {useLayout} from "../../../composables/layout.js"
-import {computed, onMounted, ref} from "vue"
-import {useNavigation} from "../../../composables/navigation.js"
-import Alert from "../../widgets/Alert.vue"
+	import {useData} from "../../../composables/data.js"
+	import {useLayout} from "../../../composables/layout.js"
+	import {computed, onMounted, ref} from "vue"
+	import {useNavigation} from "../../../composables/navigation.js"
+	import Alert from "../../widgets/Alert.vue"
 
-const data = useData()
-const layout = useLayout()
-const navigation = useNavigation()
+    import emailjs from '@emailjs/browser'
 
-/**
- * @enum
- */
-const SubmitStatus = {
-    ENABLED: "enabled",
-    SENDING: "sending",
-    SENT: "sent",
-    ERROR: "error"
-}
+	const data = useData()
+	const layout = useLayout()
+	const navigation = useNavigation()
 
-/**
- * @const
- * @type {string[]}
- */
-const FORM_FIELDS = ['name', 'email', 'subject', 'message']
+	/**
+	 * @enum
+	 */
+	const SubmitStatus = {
+	    ENABLED: "enabled",
+	    SENDING: "sending",
+	    SENT: "sent",
+	    ERROR: "error"
+	}
 
-/**
- * @type {ref.<SubmitStatus>}
- */
-const submitStatus = ref(null)
+	/**
+	 * @const
+	 * @type {string[]}
+	 */
+	const FORM_FIELDS = ['name', 'email', 'subject', 'message']
 
-/**
- * @type {number}
- */
-let submitAttempts = 0
+	/**
+	 * @type {ref.<SubmitStatus>}
+	 */
+	const submitStatus = ref(null)
 
-/**
- * @private
- */
-onMounted(() => {
-    const form = document.getElementById('contact-form')
-    if (form.attachEvent) {
-        form.attachEvent("submit", _onSubmit)
-    } else {
-        form.addEventListener("submit", _onSubmit)
-    }
+	/**
+	 * @type {number}
+	 */
+	let submitAttempts = 0
 
-    submitStatus.value = SubmitStatus.ENABLED
-})
+	/**
+	 * @private
+	 */
+	onMounted(() => {
+	    const form = document.getElementById('contact-form')
+	    if (form.attachEvent) {
+	        form.attachEvent("submit", _onSubmit)
+	    } else {
+	        form.addEventListener("submit", _onSubmit)
+	    }
 
-/**
- * @private
- */
-const _clearAllFields = () => {
-    FORM_FIELDS.forEach(field => {
-        const elField = document.getElementById(`form-${field}`)
-        elField.value = ''
-    })
-}
+	    submitStatus.value = SubmitStatus.ENABLED
+	})
 
-/**
- * @param e
- * @return {boolean}
- * @private
- */
-const _onSubmit = (e) => {
-    if (e.preventDefault) {
-        e.preventDefault()
-    }
+	/**
+	 * @private
+	 */
+	const _clearAllFields = () => {
+	    FORM_FIELDS.forEach(field => {
+	        const elField = document.getElementById(`form-${field}`)
+	        elField.value = ''
+	    })
+	}
 
-    const values = {}
+    emailjs.init({
+        publicKey: "RGKt6qi16oO2iimCa",
+    });
 
-    FORM_FIELDS.forEach(field => {
-        const elField = document.getElementById(`form-${field}`)
-        values[field] = elField.value
-    })
+	/**
+	 * @param e
+	 * @return {boolean}
+	 * @private
+	 */
+	const _onSubmit = (e) => {
+	    if (e.preventDefault) {
+	        e.preventDefault()
+	    }
 
-    submitStatus.value = SubmitStatus.SENDING
+	    const values = {}
 
-    _sendMessage()
-    return false
-}
+	    FORM_FIELDS.forEach(field => {
+	        const elField = document.getElementById(`form-${field}`)
+	        values[field] = elField.value
+	    })
 
-/**
- * @private
- */
-const _sendMessage = () => {
-    const feedbackView = layout.getFeedbackView()
-    feedbackView.showActivitySpinner(data.getString("sendingMessage") + "...")
-    submitAttempts++
+	    submitStatus.value = SubmitStatus.SENDING
 
-    /** The message sending logic goes here... **/
-    setTimeout(() => {
-        if(submitAttempts % 2 !== 0) {
-            _onMessageSent()
-        }
-        else {
-            _onMessageError()
-        }
-    }, 1000)
-    /** ************************************** **/
-}
+	    _sendMessage(values)
+	    return false
+	}
 
-/**
- * @private
- */
-const _onMessageSent = () => {
-    const feedbackView = layout.getFeedbackView()
-    feedbackView.hideActivitySpinner()
+	/**
+	 * @private
+	 */
+	const _sendMessage = (dataForm) => {
+	    const feedbackView = layout.getFeedbackView()
+	    feedbackView.showActivitySpinner(data.getString("sendingMessage") + "...");
+        emailjs.send('service_v5dhsa1', 'template_k3twuha', {
+            name: dataForm.name,
+            email: dataForm.email,
+            subject: dataForm.subject,
+            message: dataForm.message,
+        }).then(
+            (response) => {
+                _onMessageSent()
+            },
+            (error) => {
+                _onMessageError()
+            },
+        );
+	}
 
-    _clearAllFields()
-    submitStatus.value = SubmitStatus.SENT
-    if(navigation.isOneAtOnceMode()) {
-        layout.instantScrollTo(0, false)
-    }
-}
+	/**
+	 * @private
+	 */
+	const _onMessageSent = () => {
+	    const feedbackView = layout.getFeedbackView()
+	    feedbackView.hideActivitySpinner()
 
-/**
- * @private
- */
-const _onMessageError = () => {
-    const feedbackView = layout.getFeedbackView()
-    feedbackView.hideActivitySpinner()
-    submitStatus.value = SubmitStatus.ERROR
-}
+	    _clearAllFields()
+	    submitStatus.value = SubmitStatus.SENT
+	    if(navigation.isOneAtOnceMode()) {
+	        layout.instantScrollTo(0, false)
+	    }
+	}
 
-/**
- * @return {{type: string, message: String}|null}
- * @private
- */
-const alertStatus = computed(() => {
-    switch (submitStatus.value) {
-        case SubmitStatus.SENT:
-            return {type: 'success', message: data.getString('messageSent')}
-        case SubmitStatus.ERROR:
-            return {type: 'danger', message: data.getString('messageError')}
-        default:
-            return null
-    }
-})
+	/**
+	 * @private
+	 */
+	const _onMessageError = () => {
+	    const feedbackView = layout.getFeedbackView()
+	    feedbackView.hideActivitySpinner()
+	    submitStatus.value = SubmitStatus.ERROR
+	}
+
+	/**
+	 * @return {{type: string, message: String}|null}
+	 * @private
+	 */
+	const alertStatus = computed(() => {
+	    switch (submitStatus.value) {
+	        case SubmitStatus.SENT:
+	            return {type: 'success', message: data.getString('messageSent')}
+	        case SubmitStatus.ERROR:
+	            return {type: 'danger', message: data.getString('messageError')}
+	        default:
+	            return null
+	    }
+	})
 </script>
 
 <style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
+	@import "/src/scss/_theming.scss";
 
-$form-input-background-color: lighten($light-3, 20%);
-$form-input-placeholder-color:$light-5;
+	$form-input-background-color: lighten($light-3, 20%);
+	$form-input-placeholder-color:$light-5;
 
-$form-input-border-color: $light-2;
-$form-input-border-color-focus: lighten($primary, 5%);
+	$form-input-border-color: $light-2;
+	$form-input-border-color-focus: lighten($primary, 5%);
 
-$form-input-group-background-color: $light-1;
-$form-input-group-font-color: $headings-color;
+	$form-input-group-background-color: $light-1;
+	$form-input-group-font-color: $headings-color;
 
-input,
-textarea {
-    padding: 1rem;
-    font-family: $headings-font-family;
+	input,
+	textarea {
+	    padding: 1rem;
+	    font-family: $headings-font-family;
 
-    background-color: $form-input-background-color;
-    color: $dark;
-    border: 2px solid $form-input-background-color;
-    border-radius: 0;
+	    background-color: $form-input-background-color;
+	    color: $dark;
+	    border: 2px solid $form-input-background-color;
+	    border-radius: 0;
 
-    &:focus {
-        border: 2px solid $form-input-border-color-focus;
-    }
-}
+	    &:focus {
+	        border: 2px solid $form-input-border-color-focus;
+	    }
+	}
 
-.input-group {
-    @include generate-dynamic-styles-with-hash((
-        xxxl: (margin-bottom: 0.8rem),
-        sm:   (margin-bottom: 0.4rem)
-    ));
+	.input-group {
+	    @include generate-dynamic-styles-with-hash((
+	        xxxl: (margin-bottom: 0.8rem),
+	        sm:   (margin-bottom: 0.4rem)
+	    ));
 
-    border: 2px solid $form-input-border-color;
-}
+	    border: 2px solid $form-input-border-color;
+	}
 
-.input-group-text {
-    border: none;
-    border-right: 2px solid $form-input-border-color;
-    min-width: 60px;
-    background-color: $form-input-group-background-color;
+	.input-group-text {
+	    border: none;
+	    border-right: 2px solid $form-input-border-color;
+	    min-width: 60px;
+	    background-color: $form-input-group-background-color;
 
-    border-radius: 0;
-    text-align: center;
+	    border-radius: 0;
+	    text-align: center;
 
-    i {
-        color: $form-input-group-font-color;
-        margin: 0 auto;
-    }
-}
+	    i {
+	        color: $form-input-group-font-color;
+	        margin: 0 auto;
+	    }
+	}
 
-input {
-    @include generate-dynamic-styles-with-hash((
-        xxxl: (height: auto),
-        xl:   (height: max(50px, 6.5vh)),
-        lg:   (height: max(40px, 4.5vh)),
-        sm:   (height: 40px, font-size: 0.8rem),
-    ))
-}
+	input {
+	    @include generate-dynamic-styles-with-hash((
+	        xxxl: (height: auto),
+	        xl:   (height: max(50px, 6.5vh)),
+	        lg:   (height: max(40px, 4.5vh)),
+	        sm:   (height: 40px, font-size: 0.8rem),
+	    ))
+	}
 
-textarea {
-    @include generate-dynamic-styles-with-hash((
-        xxxl: (height: 218px),
-        lg:   (height: 200px),
-        sm:   (height: 150px, font-size: 0.8rem)
-    ));
+	textarea {
+	    @include generate-dynamic-styles-with-hash((
+	        xxxl: (height: 218px),
+	        lg:   (height: 200px),
+	        sm:   (height: 150px, font-size: 0.8rem)
+	    ));
 
-    border: 2px solid $form-input-border-color;
-}
+	    border: 2px solid $form-input-border-color;
+	}
 
-::-webkit-input-placeholder {
-    @include generate-dynamic-styles-with-hash((
-        xxxl: (font-size: 1.1rem),
-        lg:   (font-size: 0.9rem)
-    ));
+	::-webkit-input-placeholder {
+	    @include generate-dynamic-styles-with-hash((
+	        xxxl: (font-size: 1.1rem),
+	        lg:   (font-size: 0.9rem)
+	    ));
 
-    font-family: $headings-font-family;
-    color: $light-5;
-}
+	    font-family: $headings-font-family;
+	    color: $light-5;
+	}
 </style>
